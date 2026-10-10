@@ -2,7 +2,7 @@ from io import BytesIO
 from pathlib import Path
 
 import pytest
-from defusedxml.common import EntitiesForbidden
+from xml.etree.ElementTree import ParseError
 
 import fpdf
 from test.conftest import assert_pdf_equal
@@ -171,10 +171,10 @@ def test_svg_image_from_bytes(tmp_path):
 
 
 def test_svg_image_billion_laughs():
-    "cf. https://pypi.org/project/defusedxml/#attack-vectors"
+    "cf. https://docs.python.org/3/library/xml.html#xml-security"
     pdf = fpdf.FPDF()
     pdf.add_page()
-    with pytest.raises(EntitiesForbidden):
+    with pytest.raises(ParseError):
         pdf.image(
             BytesIO(
                 b'<?xml version="1.0"?>'
