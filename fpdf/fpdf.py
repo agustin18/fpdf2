@@ -6747,6 +6747,7 @@ class FPDF(GraphicsStateMixin, TextRegionMixin):
             w (float): width of the clipping region
             h (float): height of the clipping region
         """
+        prev_font_set = self.current_font_is_set_on_page
         self._out(
             (
                 f"q {x * self.k:.2f} {(self.h - y - h) * self.k:.2f} {w * self.k:.2f} "
@@ -6755,6 +6756,7 @@ class FPDF(GraphicsStateMixin, TextRegionMixin):
         )
         yield
         self._out("Q")
+        self.current_font_is_set_on_page = prev_font_set
 
     @check_page
     @contextmanager
@@ -6771,10 +6773,12 @@ class FPDF(GraphicsStateMixin, TextRegionMixin):
             w (float): ellipse width
             h (float): ellipse height
         """
+        prev_font_set = self.current_font_is_set_on_page
         self._out("q")
         self._draw_ellipse(x, y, w, h, "W n")
         yield
         self._out("Q")
+        self.current_font_is_set_on_page = prev_font_set
 
     @check_page
     @contextmanager
