@@ -81,6 +81,20 @@ def test_round_corners_fill_only(tmp_path):
     assert_pdf_equal(pdf, HERE / "round_corners_fill_only.pdf", tmp_path)
 
 
+def test_round_corners_clamps_radius(monkeypatch):
+    pdf = fpdf.FPDF()
+    pdf.add_page()
+    arc_axes = []
+
+    def record_arc_axes(_x, _y, a, _start_angle, _end_angle, b=None):
+        arc_axes.append(a)
+
+    monkeypatch.setattr(pdf, "_draw_arc_segment", record_arc_axes)
+    pdf.rect(0, 0, 10, 20, round_corners=True, corner_radius=10)
+
+    assert arc_axes == [10, 10, 10, 10]
+
+
 @pytest.mark.parametrize("corner_radius", [float("nan"), float("inf")])
 @pytest.mark.parametrize("round_corners", [True, ("TOP_LEFT",)])
 def test_round_corners_non_finite_radius(round_corners, corner_radius):

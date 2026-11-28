@@ -2096,7 +2096,7 @@ class FPDF(GraphicsStateMixin, TextRegionMixin):
             r = min / 5
 
         if r >= min / 2:
-            r /= min
+            r = min / 2
 
         # Calculate corner points
         point_1 = point_8 = (x, y)
